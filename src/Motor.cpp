@@ -1,4 +1,5 @@
 #include "Motor.h"
+#include "Arduino.h"
 
 Motor::Motor(int sentido, int velocidad, int pin1, int pin2)
 {
