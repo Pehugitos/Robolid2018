@@ -77,36 +77,30 @@ void Driver::setVelocidades(int velocidad1, int velocidad2)
     {
         if (aux == 0)
         {
-            motorL->setSentido(0);
             motorL->setVelocidad(aux);
         }
         else
         {
-            motorL->setSentido(1);
-            motorL->setVelocidad(-aux + difL);
+            motorL->setVelocidad(aux - difL);
         }
     }
     else
     {
-        motorL->setSentido(0);
         motorL->setVelocidad(aux + difL);
     }
     if (aux2 <= 0)
     {
         if (aux == 0)
         {
-            motorR->setSentido(0);
             motorR->setVelocidad(aux2);
         }
         else
         {
-            motorR->setSentido(1);
-            motorR->setVelocidad(-aux2 + difR);
+            motorR->setVelocidad(aux2 - difR);
         }
     }
     else
     {
-        motorR->setSentido(0);
         motorR->setVelocidad(aux2 + difR);
     }
     Serial.print(aux);
