@@ -38,14 +38,23 @@ void loop()
     delay(400);
     long distancia2 = sonar.ping_cm();
     driver.stop();
-    if (distancia1 > distancia2)
+    if (distancia1 > distancia2 && distancia1 > 30)
     {
       driver.setVelocidades(-200, 200);
       delay(400);
     }
+    else if (distancia1 <= distancia2 && distancia2 > 30)
+    {
+      driver.setVelocidades(200, 200);
+    }else{
+      driver.setVelocidades(-200, 200);
+      delay(200);
+      driver.setVelocidades(-200, -200);
+      delay(100);
+    }
   }
   else if (distancia != 0)
   {
-    driver.setVelocidades(200 , 200);
+    driver.setVelocidades(200, 200);
   }
 }
