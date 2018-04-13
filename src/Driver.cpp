@@ -103,9 +103,6 @@ void Driver::setVelocidades(int velocidad1, int velocidad2)
     {
         motorR->setVelocidad(aux2 + difR);
     }
-    Serial.print(aux);
-    Serial.print(" ");
-    Serial.println(aux2);
 }
 void Driver::stop()
 {

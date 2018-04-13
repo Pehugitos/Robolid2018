@@ -8,8 +8,6 @@ Motor *motorR = new Motor(3, 5);
 Motor *motorL = new Motor(9, 10);
 NewPing sonar(11, 12, 400);
 Driver driver(motorL, motorR, 18, 0);
-const int  variante = 10;
-char last = 'l';
 
 void setup()
 {
@@ -19,8 +17,8 @@ void setup()
     pinMode(MOTORS[i], OUTPUT);
     digitalWrite(MOTORS[i], LOW);
   }
-  Serial.begin(9600);
-  driver.setVelocidades(200 - variante, 200 + variante);
+
+  driver.setVelocidades(200, 200);
 }
 
 // the loop function runs over and over again forever
@@ -48,13 +46,6 @@ void loop()
   }
   else if (distancia != 0)
   {
-    if (last == 'l'){
-      driver.setVelocidades(200 + variante, 200 -variante );
-      last='r';
-    }else{
-      driver.setVelocidades(200 - variante, 200 +variante );
-      last='l';
-    }
-    delay(20);
+    driver.setVelocidades(200 , 200);
   }
 }
