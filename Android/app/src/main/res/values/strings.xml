@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Robolid</string>
     <string name="textHint">Introduzca el comando</string>
-    <string name="send_button">Send</string>
+    <string name="actu_button">Actualizar</string>
 </resources>
