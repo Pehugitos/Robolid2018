@@ -32,6 +32,7 @@ public class SerialActivity extends AppCompatActivity {
     private List<BluetoothDevice> pairedDevices;
     private BluetoothSocket mSocket;
     private OutputStream stream;
+    private SeekBar left, right;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +45,56 @@ public class SerialActivity extends AppCompatActivity {
                 connect(pairedDevices.get(position));
             }
         });
+        left = (SeekBar) findViewById(R.id.seekBarL);
+        right = (SeekBar) findViewById(R.id.seekBarR);
+        left.setProgress(256);
+        left.refreshDrawableState();
+        right.setProgress(256);
+        right.refreshDrawableState();
+
+        left.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mandarDatoL(progress);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                seekBar.setProgress(256);
+                seekBar.refreshDrawableState();
+            }
+        });
+
+        right.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mandarDatoR(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                seekBar.setProgress(256);
+                seekBar.refreshDrawableState();
+            }
+        });
+
+
         actualizar = findViewById(R.id.actualizar_btn);
         actualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SeekBar bar = findViewById(R.id.customSeek);
-                bar.setProgress(256);
-                bar.refreshDrawableState();
+
                 lista.setVisibility(View.GONE);
-                findViewById(R.id.list).setVisibility(View.GONE);
                 actualizar.setVisibility(View.GONE);
                 findViewById(R.id.sliders).setVisibility(View.VISIBLE);
                 scan();
@@ -66,6 +108,26 @@ public class SerialActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         } else
             scan();
+    }
+
+    private void mandarDatoL(int dato) {
+        try {
+            Log.d("Left", "L" + dato);
+            stream.write(("L" + dato).getBytes());
+            stream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void mandarDatoR(int dato) {
+        try {
+            Log.d("Right", "R" + dato);
+            stream.write(("R" + dato).getBytes());
+            stream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void scan() {
@@ -82,7 +144,7 @@ public class SerialActivity extends AppCompatActivity {
         lista.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, datos));
     }
 
-    protected void escribe(){
+    protected void escribe() {
         try {
             stream.write("B".getBytes());
             stream.flush();
@@ -95,18 +157,16 @@ public class SerialActivity extends AppCompatActivity {
         try {
             mSocket = new ConnectBT().execute(info).get();
             stream = mSocket.getOutputStream();
-            stream.write("B".getBytes());
-            stream.flush();
+            escribe();
             lista.setVisibility(View.GONE);
             actualizar.setVisibility(View.GONE);
             findViewById(R.id.sliders).setVisibility(View.VISIBLE);
-
         } catch (InterruptedException e) {
             Log.e("app>", "Desde Fuera" + e);
         } catch (ExecutionException e) {
             Log.e("app>", "Desde Fuera" + e);
         } catch (IOException e) {
-            Log.e("app>", "Desde Fuera" + e);
+            e.printStackTrace();
         }
     }
 
