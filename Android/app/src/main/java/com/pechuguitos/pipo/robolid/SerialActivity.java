@@ -2,6 +2,7 @@ package com.pechuguitos.pipo.robolid;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,25 +14,31 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+
 
 public class SerialActivity extends AppCompatActivity {
     private BluetoothAdapter mBluetoothAdapter;
     private int REQUEST_ENABLE_BT = 2;
     private ListView lista;
     private Button actualizar;
-    private ArrayList<String> datos;
+    private List<BluetoothDevice> pairedDevices;
+    private BluetoothSocket mSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.serial);
         lista = findViewById(R.id.blue_list);
-        lista.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                connect(((String)parent.getItemAtPosition(position)).split("\n"));
+                connect(pairedDevices.get(position));
             }
         });
         actualizar = findViewById(R.id.actualizar_btn);
@@ -51,8 +58,9 @@ public class SerialActivity extends AppCompatActivity {
     }
 
     protected void scan() {
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-        datos = new ArrayList<>();
+        pairedDevices = new ArrayList<BluetoothDevice>();
+        pairedDevices.addAll(mBluetoothAdapter.getBondedDevices());
+        ArrayList<String> datos = new ArrayList<>();
         if (pairedDevices.size() > 0) {
             // There are paired devices. Get the name and address of each paired device.
             for (BluetoothDevice device : pairedDevices) {
@@ -63,8 +71,17 @@ public class SerialActivity extends AppCompatActivity {
         lista.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, datos));
     }
 
-    protected void connect(String[] info ){
-        Log.d("Datos", info[0] + " " + info[1]);
+    protected void connect(BluetoothDevice info) {
+        try {
+            mSocket = new ConnectBT().execute(info).get();
+            if (mSocket.isConnected()) {
+                Log.e("app>", "PENE");
+            }
+        } catch (InterruptedException e) {
+            Log.e("app>", "Desde Fuera" + e);
+        } catch (ExecutionException e) {
+            Log.e("app>", "Desde Fuera" + e);
+        }
     }
 
 }
