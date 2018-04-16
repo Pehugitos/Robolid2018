@@ -18,9 +18,6 @@ public class ConnectBT extends AsyncTask<BluetoothDevice, Void, BluetoothSocket>
         try {
             mSocket = bluetoothDevice[0].createInsecureRfcommSocketToServiceRecord(uuid);
             mSocket.connect();
-            //OutputStream tout = mSocket.getOutputStream();
-            //tout.write("R255L255".getBytes());
-            //tout.flush();
             return mSocket;
         } catch (IOException ioe) {
             Log.e("app>", "Desde Dentro" + ioe);

@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -29,6 +31,7 @@ public class SerialActivity extends AppCompatActivity {
     private Button actualizar;
     private List<BluetoothDevice> pairedDevices;
     private BluetoothSocket mSocket;
+    private OutputStream stream;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,15 @@ public class SerialActivity extends AppCompatActivity {
         actualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SeekBar bar = findViewById(R.id.customSeek);
+                bar.setProgress(256);
+                bar.refreshDrawableState();
+                lista.setVisibility(View.GONE);
+                findViewById(R.id.list).setVisibility(View.GONE);
+                actualizar.setVisibility(View.GONE);
+                findViewById(R.id.sliders).setVisibility(View.VISIBLE);
                 scan();
+
             }
         });
 
@@ -71,15 +82,30 @@ public class SerialActivity extends AppCompatActivity {
         lista.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, datos));
     }
 
+    protected void escribe(){
+        try {
+            stream.write("B".getBytes());
+            stream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected void connect(BluetoothDevice info) {
         try {
             mSocket = new ConnectBT().execute(info).get();
-            if (mSocket.isConnected()) {
-                Log.e("app>", "PENE");
-            }
+            stream = mSocket.getOutputStream();
+            stream.write("B".getBytes());
+            stream.flush();
+            lista.setVisibility(View.GONE);
+            actualizar.setVisibility(View.GONE);
+            findViewById(R.id.sliders).setVisibility(View.VISIBLE);
+
         } catch (InterruptedException e) {
             Log.e("app>", "Desde Fuera" + e);
         } catch (ExecutionException e) {
+            Log.e("app>", "Desde Fuera" + e);
+        } catch (IOException e) {
             Log.e("app>", "Desde Fuera" + e);
         }
     }
