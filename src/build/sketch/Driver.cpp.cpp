@@ -174,7 +174,7 @@ void loop()
 
   else{
     long distancia = sonar.ping_cm();
-    if (distancia <= 30 && distancia != 0)
+    if (distancia <= 10 && distancia != 0)
     {
       driver.stop();
       speedL = -200, speedR = 200;
@@ -201,7 +201,7 @@ void loop()
         speedL = -200, speedR = 200;
         driver.setVelocidades(speedL, speedR);
         delay(200);
-        speedL = -200, speedR = -200;
+        speedL = -200,.j, speedR = -200;
         driver.setVelocidades(speedL, speedR);
         delay(100);
       }
