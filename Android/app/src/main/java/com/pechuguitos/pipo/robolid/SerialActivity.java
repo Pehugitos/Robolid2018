@@ -47,9 +47,9 @@ public class SerialActivity extends AppCompatActivity {
         });
         left = (SeekBar) findViewById(R.id.seekBarL);
         right = (SeekBar) findViewById(R.id.seekBarR);
-        left.setProgress(256);
+        left.setProgress(156);
         left.refreshDrawableState();
-        right.setProgress(256);
+        right.setProgress(156);
         right.refreshDrawableState();
 
         left.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -60,12 +60,13 @@ public class SerialActivity extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mandarDatoL(progress);
+                if (progress % 12 == 0){
+                    mandarDatoL(progress);}
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                seekBar.setProgress(256);
+                seekBar.setProgress(156);
                 seekBar.refreshDrawableState();
             }
         });
@@ -73,7 +74,8 @@ public class SerialActivity extends AppCompatActivity {
         right.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mandarDatoR(progress);
+                if (progress % 12 == 0){
+                    mandarDatoR(progress);}
             }
 
             @Override
@@ -83,7 +85,7 @@ public class SerialActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                seekBar.setProgress(256);
+                seekBar.setProgress(156);
                 seekBar.refreshDrawableState();
             }
         });
@@ -94,9 +96,9 @@ public class SerialActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                lista.setVisibility(View.GONE);
+                /*lista.setVisibility(View.GONE);
                 actualizar.setVisibility(View.GONE);
-                findViewById(R.id.sliders).setVisibility(View.VISIBLE);
+                findViewById(R.id.sliders).setVisibility(View.VISIBLE);*/
                 scan();
 
             }

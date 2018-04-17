@@ -29,6 +29,7 @@ public class ConnectBT extends AsyncTask<BluetoothDevice, Void, BluetoothSocket>
     @Override
     protected void onPostExecute(BluetoothSocket result) {
         if(result == null){
+            Log.e("app>", "Desde post");
             cancel(true);
         }
     }
